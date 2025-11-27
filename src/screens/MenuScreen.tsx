@@ -7,8 +7,11 @@ export default function MenuScreen() {
     <div style={styles.container}>
       <h1 style={styles.title}>Board Game Simulator</h1>
       <div style={styles.buttonContainer}>
+        <button style={styles.button} onClick={() => navigate('/game/conservas')}>
+          Play Conservas
+        </button>
         <button style={styles.button} onClick={() => navigate('/games')}>
-          Play Game
+          All Games
         </button>
         <button style={styles.button} onClick={() => navigate('/create')}>
           Create Game
@@ -18,8 +21,8 @@ export default function MenuScreen() {
         </button>
       </div>
       <div style={styles.footer}>
-        <p>Phase 1: Foundation Complete</p>
-        <p>Version 0.1.0</p>
+        <p>Phases 1-6 Complete - Conservas Playable!</p>
+        <p>Version 0.6.0</p>
       </div>
     </div>
   )

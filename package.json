@@ -1,6 +1,6 @@
 {
   "name": "boardgame-simulator",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "description": "A versatile board game simulator for creating and playing digital board games",
   "type": "module",
   "scripts": {
@@ -23,6 +23,7 @@
     "react-dom": "^19.2.0",
     "react-konva": "^19.2.0",
     "react-router-dom": "^7.9.6",
+    "use-image": "^1.1.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

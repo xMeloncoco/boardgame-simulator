@@ -1,15 +1,35 @@
 import { create } from 'zustand'
-import { GameState, GameComponent, GameAction } from '@/types/game'
+import { GameState, GameComponent } from '@/types/game'
+import { executeAction, GameActionPayload } from '@/utils/actionExecutor'
+import {
+  saveGameToLocalStorage,
+  loadGameFromLocalStorage,
+  serializeGameState,
+} from '@/utils/stateSerializer'
+import { generateId } from '@/utils/componentUtils'
 
 interface GameStore extends GameState {
-  // Actions
+  // Core actions
+  dispatch: (action: GameActionPayload) => void
+  batchDispatch: (actions: GameActionPayload[]) => void
+
+  // Legacy component actions (kept for convenience)
   addComponent: (component: GameComponent) => void
   removeComponent: (id: string) => void
   updateComponent: (id: string, updates: Partial<GameComponent>) => void
   setVariable: (name: string, value: number | string | boolean) => void
   setPhase: (phase: string) => void
-  addAction: (action: GameAction) => void
+
+  // Game management
+  initializeGame: (gameId: string, gameName: string) => void
   resetGame: () => void
+  saveGame: (slotName?: string) => void
+  loadGame: (slotName?: string) => boolean
+  exportState: () => string
+
+  // Query helpers
+  getComponent: (id: string) => GameComponent | undefined
+  getVariable: (name: string) => number | string | boolean | undefined
 }
 
 const initialState: GameState = {
@@ -21,9 +41,37 @@ const initialState: GameState = {
   actionHistory: [],
 }
 
-export const useGameStore = create<GameStore>((set) => ({
+export const useGameStore = create<GameStore>((set, get) => ({
   ...initialState,
 
+  // Main dispatch function using action executor
+  dispatch: (action) => {
+    const currentState = get()
+    const newState = executeAction(currentState, action)
+    set({
+      gameId: newState.gameId,
+      gameName: newState.gameName,
+      components: newState.components,
+      variables: newState.variables,
+      currentPhase: newState.currentPhase,
+      actionHistory: newState.actionHistory,
+    })
+  },
+
+  batchDispatch: (actions) => {
+    const currentState = get()
+    const newState = actions.reduce<GameState>((state, action) => executeAction(state, action), currentState)
+    set({
+      gameId: newState.gameId,
+      gameName: newState.gameName,
+      components: newState.components,
+      variables: newState.variables,
+      currentPhase: newState.currentPhase,
+      actionHistory: newState.actionHistory,
+    })
+  },
+
+  // Legacy convenience methods
   addComponent: (component) =>
     set((state) => {
       const newComponents = new Map(state.components)
@@ -32,10 +80,9 @@ export const useGameStore = create<GameStore>((set) => ({
     }),
 
   removeComponent: (id) =>
-    set((state) => {
-      const newComponents = new Map(state.components)
-      newComponents.delete(id)
-      return { components: newComponents }
+    get().dispatch({
+      type: 'REMOVE_COMPONENT',
+      payload: { componentId: id },
     }),
 
   updateComponent: (id, updates) =>
@@ -49,18 +96,52 @@ export const useGameStore = create<GameStore>((set) => ({
     }),
 
   setVariable: (name, value) =>
-    set((state) => {
-      const newVariables = new Map(state.variables)
-      newVariables.set(name, value)
-      return { variables: newVariables }
+    get().dispatch({
+      type: 'SET_VARIABLE',
+      payload: { name, value },
     }),
 
-  setPhase: (phase) => set({ currentPhase: phase }),
+  setPhase: (phase) =>
+    get().dispatch({
+      type: 'CHANGE_PHASE',
+      payload: { phase },
+    }),
 
-  addAction: (action) =>
-    set((state) => ({
-      actionHistory: [...state.actionHistory, action],
-    })),
+  // Game management
+  initializeGame: (gameId, gameName) =>
+    set({
+      ...initialState,
+      gameId: gameId || generateId(),
+      gameName,
+      components: new Map(),
+      variables: new Map(),
+      currentPhase: 'setup',
+      actionHistory: [],
+    }),
 
   resetGame: () => set(initialState),
+
+  saveGame: (slotName = 'autosave') => {
+    const state = get()
+    saveGameToLocalStorage(state, slotName)
+  },
+
+  loadGame: (slotName = 'autosave') => {
+    const loadedState = loadGameFromLocalStorage(slotName)
+    if (loadedState) {
+      set(loadedState)
+      return true
+    }
+    return false
+  },
+
+  exportState: () => {
+    const state = get()
+    return JSON.stringify(serializeGameState(state), null, 2)
+  },
+
+  // Query helpers
+  getComponent: (id) => get().components.get(id),
+
+  getVariable: (name) => get().variables.get(name),
 }))

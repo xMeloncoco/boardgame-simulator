@@ -63,6 +63,7 @@ export interface GameState {
 // Actions
 export type ActionType =
   | 'CREATE_TOKEN'
+  | 'CREATE_CARD'
   | 'MOVE_COMPONENT'
   | 'FLIP_COMPONENT'
   | 'REMOVE_COMPONENT'

@@ -1,0 +1,292 @@
+{
+  "gameInfo": {
+    "name": "Conservas - January",
+    "version": "1.0.0",
+    "description": "Solo fishing game where you manage boats and sell fish to market",
+    "playerCount": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "components": {
+    "tokens": [
+      {
+        "id": "sardine-tokens",
+        "name": "Sardine",
+        "tokenType": "sardine",
+        "count": 10,
+        "flippable": true,
+        "properties": {
+          "fishSide": "front",
+          "tinSide": "back"
+        }
+      },
+      {
+        "id": "scallop-tokens",
+        "name": "Scallop",
+        "tokenType": "scallop",
+        "count": 10,
+        "flippable": true,
+        "properties": {
+          "fishSide": "front",
+          "tinSide": "back"
+        }
+      },
+      {
+        "id": "water-tokens",
+        "name": "Water",
+        "tokenType": "water",
+        "count": 30,
+        "flippable": false
+      }
+    ],
+    "cards": [
+      {
+        "id": "boat-el-dorado",
+        "name": "El Dorado",
+        "cardType": "boat",
+        "count": 1,
+        "size": { "width": 100, "height": 140 },
+        "properties": {
+          "catchSize": 2,
+          "cost": 0,
+          "upkeep": 0,
+          "description": "Starting boat. Catch: 2"
+        }
+      },
+      {
+        "id": "boat-pez-limoncello",
+        "name": "Pez Limoncello",
+        "cardType": "boat",
+        "count": 1,
+        "size": { "width": 100, "height": 140 },
+        "properties": {
+          "catchSize": 3,
+          "cost": 5,
+          "upkeep": 0,
+          "description": "Catch: 3"
+        }
+      },
+      {
+        "id": "boat-quid-pro-pulpo",
+        "name": "Quid Pro Pulpo",
+        "cardType": "boat",
+        "count": 1,
+        "size": { "width": 100, "height": 140 },
+        "properties": {
+          "catchSize": 2,
+          "cost": 3,
+          "upkeep": 1,
+          "description": "Catch: 2, Upkeep: €1"
+        }
+      },
+      {
+        "id": "open-water",
+        "name": "Open Water",
+        "cardType": "special",
+        "count": 1,
+        "size": { "width": 100, "height": 140 },
+        "properties": {
+          "description": "All tokens go to Deep Sea"
+        }
+      },
+      {
+        "id": "upgrade-secondary-nets",
+        "name": "Secondary Nets",
+        "cardType": "upgrade",
+        "count": 1,
+        "size": { "width": 80, "height": 110 },
+        "properties": {
+          "cost": "2-same",
+          "effect": "Draw 8 tokens instead of 5",
+          "phase": "at-sea"
+        }
+      },
+      {
+        "id": "upgrade-fish-finders",
+        "name": "Fish Finders",
+        "cardType": "upgrade",
+        "count": 1,
+        "size": { "width": 80, "height": 110 },
+        "properties": {
+          "cost": "2-same",
+          "effect": "Look at top 3 tokens before drawing",
+          "phase": "at-sea"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "id": "sea-bag",
+        "name": "Sea Bag",
+        "containerType": "bag",
+        "initialContents": [],
+        "position": { "x": 50, "y": 50 },
+        "visible": false
+      },
+      {
+        "id": "general-supply",
+        "name": "General Supply",
+        "containerType": "pile",
+        "initialContents": [],
+        "position": { "x": 50, "y": 150 },
+        "visible": true
+      },
+      {
+        "id": "boat-deck",
+        "name": "Boat Deck",
+        "containerType": "deck",
+        "initialContents": [],
+        "position": { "x": 900, "y": 50 },
+        "visible": false
+      },
+      {
+        "id": "upgrade-deck",
+        "name": "Upgrade Deck",
+        "containerType": "deck",
+        "initialContents": [],
+        "position": { "x": 1000, "y": 50 },
+        "visible": false
+      },
+      {
+        "id": "boat-market",
+        "name": "Boat Market",
+        "containerType": "hand",
+        "initialContents": [],
+        "position": { "x": 900, "y": 220 },
+        "visible": true
+      },
+      {
+        "id": "upgrade-market",
+        "name": "Upgrade Market",
+        "containerType": "hand",
+        "initialContents": [],
+        "position": { "x": 900, "y": 360 },
+        "visible": true
+      },
+      {
+        "id": "player-boats",
+        "name": "My Boats",
+        "containerType": "hand",
+        "initialContents": [],
+        "position": { "x": 200, "y": 500 },
+        "visible": true
+      },
+      {
+        "id": "player-upgrades",
+        "name": "My Upgrades",
+        "containerType": "hand",
+        "initialContents": [],
+        "position": { "x": 200, "y": 650 },
+        "visible": true
+      }
+    ],
+    "areas": [
+      {
+        "id": "boat-area",
+        "name": "Boats & Open Water",
+        "bounds": { "x": 200, "y": 50, "width": 650, "height": 200 },
+        "acceptsTypes": ["card", "token"]
+      },
+      {
+        "id": "market-grid",
+        "name": "Market Grid (January)",
+        "bounds": { "x": 200, "y": 280, "width": 650, "height": 180 },
+        "acceptsTypes": ["token"]
+      }
+    ]
+  },
+  "variables": {
+    "money": {
+      "initial": 10,
+      "type": "number"
+    },
+    "round": {
+      "initial": 1,
+      "type": "number"
+    },
+    "maxRounds": {
+      "initial": 7,
+      "type": "number"
+    },
+    "tokensPerDraw": {
+      "initial": 5,
+      "type": "number"
+    }
+  },
+  "phases": [
+    {
+      "id": "setup",
+      "name": "Setup",
+      "description": "Set up the game for January market",
+      "nextPhase": "at-sea"
+    },
+    {
+      "id": "at-sea",
+      "name": "At Sea",
+      "description": "Draw tokens from the sea bag and place on boats",
+      "nextPhase": "on-land"
+    },
+    {
+      "id": "on-land",
+      "name": "On Land",
+      "description": "Sell fish to market, buy boats and upgrades",
+      "nextPhase": "end-of-day"
+    },
+    {
+      "id": "end-of-day",
+      "name": "End of Day",
+      "description": "Pay upkeep, fish spawn, advance round",
+      "nextPhase": "at-sea"
+    },
+    {
+      "id": "game-over",
+      "name": "Game Over",
+      "description": "Check win/lose conditions"
+    }
+  ],
+  "setup": [
+    {
+      "action": "loadSeaBag",
+      "parameters": {
+        "sardines": 5,
+        "scallops": 5,
+        "water": 10
+      }
+    },
+    {
+      "action": "dealBoatMarket",
+      "parameters": {
+        "count": 3
+      }
+    },
+    {
+      "action": "dealUpgradeMarket",
+      "parameters": {
+        "count": 3
+      }
+    },
+    {
+      "action": "giveStartingBoat",
+      "parameters": {
+        "boat": "boat-el-dorado"
+      }
+    }
+  ],
+  "winConditions": [
+    {
+      "description": "Have €40 and at least 4 sardines and 4 scallops in the sea",
+      "check": "checkWinCondition"
+    }
+  ],
+  "loseConditions": [
+    {
+      "description": "Run out of water tokens (overfished)",
+      "check": "checkOverfished"
+    },
+    {
+      "description": "Complete all rounds without meeting win condition",
+      "check": "checkRoundsExceeded"
+    }
+  ]
+}
